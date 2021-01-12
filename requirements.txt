@@ -1,0 +1,22 @@
+attrs==19.3.0             # via pytest
+certifi==2019.9.11        # via requests
+chardet==3.0.4            # via requests
+django==2.2.6
+idna==2.8                 # via requests
+importlib-metadata==1.5.0  # via pluggy, pytest
+more-itertools==8.2.0     # via pytest
+packaging==20.1           # via pytest
+pillow==7.0.0
+pluggy==0.13.1            # via pytest
+py==1.8.1                 # via pytest
+pyparsing==2.4.6          # via packaging
+pytest-django==3.8.0
+pytest==5.3.5             # via pytest-django
+pytz==2019.3              # via django
+requests==2.22.0
+six==1.14.0               # via packaging
+sorl-thumbnail==12.6.3
+sqlparse==0.3.0           # via django
+urllib3==1.25.6           # via requests
+wcwidth==0.1.8            # via pytest
+zipp==2.2.0               # via importlib-metadata
