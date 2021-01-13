@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Последние обновления на сайте{% endblock %}
+{% block header %}Последние обновления на сайте{% endblock %}
+
+{% block content %}
+
+    {% load cache %}
+    {% cache 20 index_page %}
+    <div class="container">
+        {% for post in page %}
+            {% include "include/post_item.html" %}
+            {% if not forloop.last %}<hr>{% endif %}
+        {% endfor %}
+    </div>
+    {% endcache %}
+
+    {% if page.has_other_pages %}
+        {% include "include/paginator.html" with items=page paginator=paginator%}
+    {% endif %}
+
+{% endblock %}

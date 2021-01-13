@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Записи сообщества {{ group.title }}{% endblock %}
+{% block header %}{{ group.title }}{% endblock %}
+{% block content %}
+    <p>{{ group.description|linebreaksbr }}</p>
+    {% for post in page %}
+        {% include "include/post_item.html" %}
+        {% if not forloop.last %}<hr>{% endif %}
+    {% endfor %}
+{% if page.has_other_pages %}
+    {% include "include/paginator.html" with items=page paginator=paginator%}
+{% endif %}
+{% endblock %}

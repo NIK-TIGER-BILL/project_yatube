@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Об авторе проекта{% endblock %}
+{% block content %}
+{% load user_filters %}
+{% load static %}
+  <main role="main" class="container">
+      <div class="row">
+          <div class="col-md-3 mb-3 mt-1">
+              <div class="card">
+                  <div class="card-body">
+                      <ul class="list-group list-group-flush">
+                          <li class="list-group-item">
+                              <div class="h3">
+                                  Об авторе
+                              </div>
+                          </li>
+                          <li class="list-group-item">
+                              <div class="h6 text-muted">
+                                  "Кто ты без программирования?" - "Эмм... гений, миллиардер, плейбой, филантроп"
+                              </div>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-9">
+              <div class="card-body">
+                  <div class="card-text">
+                      <img src="{% static 'author_photo.jpg' %}" alt="фото автора" width="255" align="left" hspace="20">
+                      <h3>Замулдинов Никита</h3>
+                      <p>Программирую программы, только ради мысли о том, что когда-то программа будет программировать меня. Сам программист создан для того, чтобы облегчать рутинные занятия.
+                      По одному щелчку, у нас происходить поиск в браузере информации, которую нужно было бы искать какое то время, тратить физические силы
+                      и возможно даже не найти, из за невнимательности, недостаточности. Эти мысли интересны мне</p>
+                      <a href="https://github.com/NIK-TIGER-BILL">Профиль Github</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </main>
+{% endblock %}

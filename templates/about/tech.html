@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Об авторе проекта{% endblock %}
+{% block content %}
+{% load user_filters %}
+  <main role="main" class="container">
+      <div class="row">
+          <div class="col-md-3 mb-3 mt-1">
+              <div class="card">
+                  <div class="card-body">
+                      <ul class="list-group list-group-flush">
+                          <li class="list-group-item">
+                              <div class="h3">
+                                  Технологишен
+                              </div>
+                          </li>
+                          <li class="list-group-item">
+                              <div class="h6 text-muted">
+                                  А что такое технология программирования?
+                              </div>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-9">
+              <div class="card-body">
+                  <div class="card-text">
+                      <h1>Техно лог ич нос ть</h1>
+                      <p>Если внимательно присматреться, она состоит из:<br>
+                          <strong>-Технлогий</strong>, слово которое говорит само за себя<br>
+                          <strong>-Логгирования</strong>, без логгов, не разберешь ошибок, а на ошибках все строится<br>
+                          <strong>-Ич</strong> - это как личность, твоя нотка в программировании. Интересно, почему программы не подписывают как картины и не продают потом по миллионам долларов<br>
+                          <strong>-Нос</strong>, обояние в программировании еще никогда не мешала, а остаться без него в 2020, весьма страшно (надеюсь намек понят)<br>
+                          <strong>-ть</strong>, это как ты, только в древнем звучании, без тебя ничего не произойдет и не сделается само<br>
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </main>
+{% endblock %}

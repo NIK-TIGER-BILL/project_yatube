@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Обзор поста{% endblock %}
+{% block header %}Пост{% endblock %}
+{% block content %}
+<main role="main" class="container">
+    <div class="row">
+        {% include "include/author_part.html" %}
+            <div class="col-md-9">
+                {% include "include/post_item.html" %}
+                {% include "include/comments.html" %}
+     </div>
+    </div>
+</main>
+{% endblock %}

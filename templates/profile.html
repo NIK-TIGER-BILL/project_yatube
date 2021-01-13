@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Профиль {{ author.username }}{% endblock %}
+{% block header %}{{ author.username }}{% endblock %}
+{% block content %}
+<main role="main" class="container">
+    <div class="row">
+        {% include "include/author_part.html" %}
+        <div class="col-md-9">
+            {% for post in page %}
+            {% include "include/post_item.html" %}
+            {% if not forloop.last %}<hr>{% endif %}
+            {% endfor %}
+            {% if page.has_other_pages %}
+                {% include "include/paginator.html" with items=page paginator=paginator%}
+            {% endif %}
+         </div>
+    </div>
+</main>
+{% endblock %}
