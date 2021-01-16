@@ -7,12 +7,28 @@
                         <div class="h3 text-muted">
                              @{{ author.username }}
                         </div>
+                        <div class="mt-3">
+                            {% ifnotequal user author %}
+                                {% if follow %}
+                                <a class="btn btn-lg btn-light"
+                                        href="{% url 'posts:profile_unfollow' author.username %}" role="button">
+                                        Отписаться
+                                </a>
+                                {% else %}
+                                <a class="btn btn-lg btn-primary"
+                                        href="{% url 'posts:profile_follow' author.username %}" role="button">
+                                Подписаться
+                                </a>
+                                {% endif %}
+                            {% endifnotequal %}
+                        </div>
                 </div>
+
                 <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                                 <div class="h6 text-muted">
-                                Подписчиков: XXX <br />
-                                Подписан: XXX
+                                Подписчиков: {{ followers }} <br />
+                                Подписан: {{ following }}
                                 </div>
                         </li>
                         <li class="list-group-item">

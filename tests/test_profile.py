@@ -1,7 +1,6 @@
 import pytest
-
-from django.core.paginator import Paginator, Page
 from django.contrib.auth import get_user_model
+from django.core.paginator import Page, Paginator
 
 
 def get_field_context(context, field_type):

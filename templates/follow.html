@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-{% block title %}Последние обновления на сайте{% endblock %}
-{% block header %}Последние обновления на сайте{% endblock %}
+{% block title %}Подписки{% endblock %}
+{% block header %}Подписки{% endblock %}
 
 {% block content %}
 
     {% load cache %}
     <div class="container">
 
-    {% include "include/menu.html" with index=True %}
+    {% include "include/menu.html" with follow=True %}
 
-    {% cache 20 index_page page%}
+    {% cache 1 index_page %}
 
         {% for post in page %}
             {% include "include/post_item.html" %}

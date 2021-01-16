@@ -3,7 +3,7 @@ import tempfile
 
 import pytest
 from django.contrib.auth import get_user_model
-from django.core.paginator import Paginator, Page
+from django.core.paginator import Page, Paginator
 from django.db.models import fields
 
 try:

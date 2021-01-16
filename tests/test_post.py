@@ -1,12 +1,14 @@
 from io import BytesIO
 
 import pytest
-from PIL import Image
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.files.base import File
-from posts.models import Post
 from django.db.models.query import QuerySet
+from PIL import Image
+
+from posts.models import Post
+
 
 def get_field_context(context, field_type):
     for field in context.keys():
