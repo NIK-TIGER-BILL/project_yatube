@@ -9,7 +9,7 @@
 
     {% include "include/menu.html" with follow=True %}
 
-    {% cache 1 index_page %}
+    {% cache 10 follow_index_page %}
 
         {% for post in page %}
             {% include "include/post_item.html" %}
