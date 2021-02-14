@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-{% if edit %}
+{% if post %}
     Редактирование записи
 {% else %}
     Создания новой записи
@@ -13,7 +13,7 @@
     <div class="col-md-8 p-5">
         <div class="card">
             <div class="card-header">
-                {% if edit %}
+                {% if post %}
                     Редактировать запись
                 {% else %}
                     Новая запись

@@ -8,7 +8,7 @@ class Group(models.Model):
     title = models.CharField(verbose_name='Заголовок', max_length=200,
                              help_text='Дайте краткое название группе')
     slug = models.SlugField(verbose_name='Слаг', unique=True,
-                            help_text='Укажите адрес страницы группы')
+                            help_text='Укажите ключ адреса страницы группы')
     description = models.TextField(verbose_name='Описание группы',
                                    help_text='Опишите группу')
 
@@ -18,15 +18,14 @@ class Group(models.Model):
 
 class Post(models.Model):
     text = models.TextField(verbose_name='Текст поста',
-                            help_text='Опишите суть записи')
+                            help_text='Здесь напишите текст записи')
     pub_date = models.DateTimeField(verbose_name='date published',
-                                    auto_now_add=True,
-                                    help_text='Здесь укажите дату публикации')
+                                    auto_now_add=True,)
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                related_name='posts')
     group = models.ForeignKey(Group, blank=True, null=True,
                               on_delete=models.SET_NULL,
-                              related_name='group_posts')
+                              related_name='posts')
     image = models.ImageField(upload_to='posts/', blank=True, null=True)
 
     class Meta:
@@ -61,4 +60,4 @@ class Follow(models.Model):
                                related_name='following')
 
     def __str__(self):
-        return f'{self.user} subscripe to {self.author}'
+        return f'User:{self.user} following to {self.author}'

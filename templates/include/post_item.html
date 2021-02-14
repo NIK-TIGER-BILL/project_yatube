@@ -17,7 +17,7 @@
 
         <p class="card-text">
           <a name="post_{{ post.id }}" href="{% url 'posts:profile' post.author.username %}">
-            <strong class="d-block text-gray-dark">@{{ post.author }}</strong>
+            <strong class="d-block text-gray-dark">@{{ post.author.username }}</strong>
           </a>
           {{ post.text|linebreaksbr }}
         </p>

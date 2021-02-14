@@ -26,4 +26,3 @@ class TaskPagesTests(TestCase):
         context = response.context.get('page')[0].text
 
         self.assertNotEqual(context, 'Второй пост')
-

@@ -40,4 +40,4 @@ class TaskPagesTests(TestCase):
         self.assertRedirects(
             response,
             f'/auth/login/?next=/{TaskPagesTests.test_user.username}/'
-            f'{TaskPagesTests.post.id}/comment')
+            f'{TaskPagesTests.post.id}/comment/')
