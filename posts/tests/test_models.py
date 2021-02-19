@@ -14,12 +14,10 @@ class TaskModelTest(TestCase):
             slug='test_group',
             description='Текстовое описание группы'
         )
-
         Post.objects.create(
             text='Тестовое описание поста',
             author=cls.test_user
         )
-
         cls.post = Post.objects.last()
         cls.group = Group.objects.last()
 
@@ -39,12 +37,10 @@ class TaskModelTest(TestCase):
                 'description': 'Описание группы',
                     },
         }
-
         for value, expected in field_verboses['post'].items():
             with self.subTest(value=value):
                 self.assertEqual(
                     post._meta.get_field(value).verbose_name, expected)
-
         for value, expected in field_verboses['group'].items():
             with self.subTest(value=value):
                 self.assertEqual(
@@ -54,23 +50,18 @@ class TaskModelTest(TestCase):
         """help_text в полях совпадает с ожидаемым."""
         post = TaskModelTest.post
         group = TaskModelTest.group
-
         field_help_texts = {
             'post': {
-                'text': 'Здесь напишите текст записи',
-                    },
-
+                'text': 'Здесь напишите текст записи'},
             'group': {
                 'title': 'Дайте краткое название группе',
                 'slug': 'Укажите ключ адреса страницы группы',
-                'description': 'Опишите группу',
-                    },
+                'description': 'Опишите группу'}
         }
         for value, expected in field_help_texts['post'].items():
             with self.subTest(value=value):
                 self.assertEqual(
                     post._meta.get_field(value).help_text, expected)
-
         for value, expected in field_help_texts['group'].items():
             with self.subTest(value=value):
                 self.assertEqual(
@@ -79,11 +70,7 @@ class TaskModelTest(TestCase):
     def test_str_name(self):
         post = TaskModelTest.post
         group = TaskModelTest.group
-
         expected_object_name_post = post.text[:15]
         self.assertEquals(expected_object_name_post, str(post))
-
         expected_object_name_group = group.title
         self.assertEquals(expected_object_name_group, str(group))
-
-

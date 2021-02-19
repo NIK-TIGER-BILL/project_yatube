@@ -1,5 +1,6 @@
 from django.test import Client, TestCase
 from django.urls import reverse
+from django.core.cache import cache
 
 from posts.models import Post, User
 
@@ -17,12 +18,13 @@ class TaskPagesTests(TestCase):
     def setUp(self):
         self.guest_client = Client()
 
-    # То работает, то нет, сам по себе. Так и не разберусь как это решить
     def test_pages_uses_correct_template(self):
         """Кэширование данных на главной странице работает корректно"""
-        Post.objects.create(text='Второй пост', author=self.test_user)
-
         response = self.guest_client.get(reverse('posts:index'))
-        context = response.context.get('page')[0].text
-
-        self.assertNotEqual(context, 'Второй пост')
+        cached_response_content = response.content
+        Post.objects.create(text='Второй пост', author=self.test_user)
+        response = self.guest_client.get(reverse('posts:index'))
+        self.assertEqual(cached_response_content, response.content)
+        cache.clear()
+        response = self.guest_client.get(reverse('posts:index'))
+        self.assertNotEqual(cached_response_content, response.content)

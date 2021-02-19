@@ -38,7 +38,8 @@ def group_posts(request, slug):
 
 @login_required
 def new_post(request):
-    form = PostForm(request.POST or None)
+    form = PostForm(request.POST or None,
+                    files=request.FILES or None)
     if form.is_valid():
         post_new = form.save(commit=False)
         post_new.author = request.user

@@ -8,10 +8,8 @@ class TaskPagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
         cls.test_user_alex = User.objects.create(username='test_alex')
         cls.test_user_nikita = User.objects.create(username='test_nikita')
-
         cls.post = Post.objects.create(
             text='Тестовое описание поста',
             author=cls.test_user_alex,
@@ -21,8 +19,8 @@ class TaskPagesTests(TestCase):
         self.authorized_client = Client()
         self.authorized_client.force_login(self.test_user_nikita)
 
-    def test_follow_unfollow(self):
-        """Проверка подписки и отписки на пользователя"""
+    def test_follow(self):
+        """Проверка подписки на пользователя"""
         self.authorized_client.get(
             reverse('posts:profile_follow',
                     kwargs={
@@ -31,17 +29,21 @@ class TaskPagesTests(TestCase):
         follow = Follow.objects.get(user=TaskPagesTests.test_user_nikita)
         self.assertEqual(TaskPagesTests.test_user_alex, follow.author)
 
+    def test_unfollow(self):
+        """Проверка отписки от пользователя"""
+        Follow.objects.create(user=TaskPagesTests.test_user_nikita,
+                              author=TaskPagesTests.test_user_alex)
         self.authorized_client.get(
             reverse('posts:profile_unfollow',
                     kwargs={
                         'username': TaskPagesTests.test_user_alex.username
                     }), follow=True)
-        self.assertRaises(Follow.DoesNotExist,
-                          Follow.objects.get,
-                          user=TaskPagesTests.test_user_nikita)
+        self.assertFalse(Follow.objects.filter(
+            user=TaskPagesTests.test_user_nikita,
+            author=TaskPagesTests.test_user_alex).exists())
 
     def test_view_post_followed_and_unfollowed_users(self):
-        """Посты отображаются у подписанных людей и наоборот"""
+        """Посты отображаются у подписанных людей"""
         self.authorized_client.get(
             reverse('posts:profile_follow',
                     kwargs={
