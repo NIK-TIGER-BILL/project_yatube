@@ -1,5 +1,4 @@
 import shutil
-import tempfile
 
 from django import forms
 from django.conf import settings
@@ -8,8 +7,9 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 from posts.forms import PostForm
-from posts.models import Post, User, Group
+from posts.models import Group, Post, User
 
+TEST_DIR = settings.BASE_DIR + '\\test_data'
 SMALL_GIF = (b'\x47\x49\x46\x38\x39\x61\x02\x00'
              b'\x01\x00\x80\x00\x00\x00\x00\x00'
              b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
@@ -32,7 +32,7 @@ class PostCreateFormTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        settings.MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
+        settings.MEDIA_ROOT = TEST_DIR
         cls.form = PostForm()
         cls.test_user = User.objects.create(username=USERNAME)
         cls.group = Group.objects.create(

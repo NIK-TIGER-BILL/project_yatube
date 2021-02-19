@@ -16,11 +16,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Comment',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.TextField(help_text='Здесь писать комментарий', verbose_name='Текст комментария')),
-                ('created', models.DateTimeField(auto_now_add=True, help_text='Здесь укажите дату публикации', verbose_name='date published')),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to=settings.AUTH_USER_MODEL)),
-                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='posts.Post')),
+                ('id', models.AutoField(auto_created=True, primary_key=True,
+                                        serialize=False, verbose_name='ID')),
+                ('text', models.TextField(help_text='Здесь писать комментарий',
+                                          verbose_name='Текст комментария')),
+                ('created', models.DateTimeField(
+                    auto_now_add=True,
+                    help_text='Здесь укажите дату публикации',
+                    verbose_name='date published')),
+                ('author', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='comments', to=settings.AUTH_USER_MODEL)),
+                ('post', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    related_name='comments', to='posts.Post')),
             ],
             options={
                 'ordering': ('-created',),

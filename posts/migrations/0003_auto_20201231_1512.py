@@ -18,31 +18,42 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='group',
             name='description',
-            field=models.TextField(help_text='Опишите группу', verbose_name='Описание группы'),
+            field=models.TextField(help_text='Опишите группу',
+                                   verbose_name='Описание группы'),
         ),
         migrations.AlterField(
             model_name='group',
             name='slug',
-            field=models.SlugField(help_text='Укажите адрес страницы группы', unique=True, verbose_name='Слаг'),
+            field=models.SlugField(help_text='Укажите адрес страницы группы',
+                                   unique=True, verbose_name='Слаг'),
         ),
         migrations.AlterField(
             model_name='group',
             name='title',
-            field=models.CharField(help_text='Дайте краткое название группе', max_length=200, verbose_name='Заголовок'),
+            field=models.CharField(help_text='Дайте краткое название группе',
+                                   max_length=200, verbose_name='Заголовок'),
         ),
         migrations.AlterField(
             model_name='post',
             name='group',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='posts', to='posts.Group'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='posts', to='posts.Group'),
         ),
         migrations.AlterField(
             model_name='post',
             name='pub_date',
-            field=models.DateTimeField(auto_now_add=True, help_text='Здесь укажите дату публикации', verbose_name='date published'),
+            field=models.DateTimeField(
+                auto_now_add=True,
+                help_text='Здесь укажите дату публикации',
+                verbose_name='date published'),
         ),
         migrations.AlterField(
             model_name='post',
             name='text',
-            field=models.TextField(help_text='Опишите суть записи', verbose_name='Текст поста'),
+            field=models.TextField(help_text='Опишите суть записи',
+                                   verbose_name='Текст поста'),
         ),
     ]

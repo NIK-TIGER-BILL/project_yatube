@@ -1,6 +1,6 @@
+from django.conf.urls.static import static
 from django.test import Client, TestCase
 from django.urls import reverse
-from django.conf.urls.static import static
 
 from posts.models import Comment, Post, User
 

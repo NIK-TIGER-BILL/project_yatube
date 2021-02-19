@@ -18,5 +18,5 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,
                           document_root=settings.STATIC_ROOT)
 
-handler404 = "posts.views.page_not_found" # noqa
-handler500 = "posts.views.server_error" # noqa
+handler404 = "posts.views.page_not_found"  # noqa
+handler500 = "posts.views.server_error"  # noqa
