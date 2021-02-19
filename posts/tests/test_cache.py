@@ -4,12 +4,14 @@ from django.core.cache import cache
 
 from posts.models import Post, User
 
+USERNAME = 'test'
+
 
 class TaskPagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.test_user = User.objects.create(username='test')
+        cls.test_user = User.objects.create(username=USERNAME)
         cls.post = Post.objects.create(
             text='Тестовое описание поста',
             author=cls.test_user,

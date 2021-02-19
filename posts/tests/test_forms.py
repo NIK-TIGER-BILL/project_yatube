@@ -23,6 +23,9 @@ OTHER_SMALL_GIF = (b'\x47\x49\x46\x38\x39\x61\x02\x00'
                    b'\x00\x00\x00\x2C\x00\x00\x00\x00'
                    b'\x02\x00\x01\x00\x00\x02\x02\x0C'
                    b'\x0A\x00\x3B')
+USERNAME = 'test'
+URL_INDEX = reverse('posts:index')
+URL_NEW_POST = reverse('posts:new_post')
 
 
 class PostCreateFormTests(TestCase):
@@ -31,7 +34,7 @@ class PostCreateFormTests(TestCase):
         super().setUpClass()
         settings.MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
         cls.form = PostForm()
-        cls.test_user = User.objects.create(username='test')
+        cls.test_user = User.objects.create(username=USERNAME)
         cls.group = Group.objects.create(
             title='Заголовок',
             slug='test-slug',
@@ -41,6 +44,12 @@ class PostCreateFormTests(TestCase):
             text='Тестовое описание поста',
             author=User.objects.get(id=cls.test_user.id),
         )
+        cls.URL_EDIT_POST = reverse(
+            'posts:post_edit', kwargs={
+                'username': USERNAME, 'post_id': PostCreateFormTests.post.id})
+        cls.URL_POST = reverse(
+            'posts:post', kwargs={
+                'username': USERNAME, 'post_id': PostCreateFormTests.post.id})
 
     @classmethod
     def tearDownClass(cls):
@@ -65,11 +74,11 @@ class PostCreateFormTests(TestCase):
             'image': uploaded,
         }
         response = self.authorized_client.post(
-            reverse('posts:new_post'),
+            URL_NEW_POST,
             data=form_data,
             follow=True
         )
-        self.assertRedirects(response, reverse('posts:index'))
+        self.assertRedirects(response, URL_INDEX)
         self.assertEqual(Post.objects.count(), posts_count + 1)
         self.assertTrue(
             Post.objects.filter(
@@ -83,11 +92,8 @@ class PostCreateFormTests(TestCase):
     def test_edit_post_page_context(self):
         """Шаблон edit_post сформирован с правильным контекстом."""
         urls = [
-            reverse('posts:new_post'),
-            reverse('posts:post_edit',
-                    kwargs={
-                        'username': PostCreateFormTests.test_user.username,
-                        'post_id': PostCreateFormTests.post.id})]
+            URL_NEW_POST,
+            PostCreateFormTests.URL_EDIT_POST]
         form_fields = {
             'text': forms.fields.CharField,
             'group': forms.fields.ChoiceField,
@@ -119,10 +125,7 @@ class PostCreateFormTests(TestCase):
             'image': uploaded,
         }
         response = self.authorized_client.post(
-            reverse('posts:post_edit', kwargs={
-                'username': PostCreateFormTests.test_user.username,
-                'post_id': PostCreateFormTests.post.id
-            }),
+            PostCreateFormTests.URL_EDIT_POST,
             data=form_data,
             follow=True
         )
@@ -130,8 +133,5 @@ class PostCreateFormTests(TestCase):
         self.assertEqual(edit_post.text, form_data['text'])
         self.assertEqual(edit_post.group, other_group)
         self.assertEqual(edit_post.image, 'posts/other_small.gif')
-        self.assertRedirects(response, reverse('posts:post', kwargs={
-            'username': PostCreateFormTests.test_user.username,
-            'post_id': PostCreateFormTests.post.id
-        }))
+        self.assertRedirects(response, PostCreateFormTests.URL_POST)
         self.assertEqual(Post.objects.count(), posts_count)

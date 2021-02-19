@@ -4,16 +4,21 @@ from django.conf.urls.static import static
 
 from posts.models import Comment, Post, User
 
+USERNAME = 'test'
+
 
 class TaskPagesTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.test_user = User.objects.create(username='test')
+        cls.test_user = User.objects.create(username=USERNAME)
         cls.post = Post.objects.create(
             text='Тестовое описание поста',
             author=cls.test_user,
         )
+        cls.URL_ADD_COMMENT = reverse('posts:add_comment',
+                                      kwargs={'username': USERNAME,
+                                              'post_id': cls.post.id},)
 
     def setUp(self):
         self.guest_client = Client()
@@ -23,12 +28,9 @@ class TaskPagesTests(TestCase):
     def test_authorized_client_comment(self):
         """Авторизированный пользователь может комментиовать пост"""
         text_comment = 'Тестовый комментарий'
-        self.authorized_client.post(
-            reverse('posts:add_comment',
-                    kwargs={'username': TaskPagesTests.test_user.username,
-                            'post_id': TaskPagesTests.post.id},),
-            data={'text': text_comment}
-        )
+        self.authorized_client.post(TaskPagesTests.URL_ADD_COMMENT,
+                                    data={'text': text_comment}
+                                    )
         comment = Comment.objects.filter(post=TaskPagesTests.post).last()
         self.assertEqual(comment.text, text_comment)
         self.assertEqual(comment.post, TaskPagesTests.post)
@@ -37,9 +39,8 @@ class TaskPagesTests(TestCase):
     def test_guest_client_comment_redirect_login(self):
         """Гостя переводит на авторизацию при комментировании"""
         count_comments = Comment.objects.count()
-        url = reverse('posts:add_comment',
-                      kwargs={'username': TaskPagesTests.test_user.username,
-                              'post_id': TaskPagesTests.post.id})
-        response = self.guest_client.get(url, follow=True)
-        self.assertRedirects(response, f'{reverse("login")}' + '?next=' + url)
+        response = self.guest_client.get(TaskPagesTests.URL_ADD_COMMENT,
+                                         follow=True)
+        self.assertRedirects(response, f'{reverse("login")}' + '?next=' +
+                             TaskPagesTests.URL_ADD_COMMENT)
         self.assertEqual(count_comments, Comment.objects.count())
