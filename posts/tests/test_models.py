@@ -28,14 +28,12 @@ class TaskModelTest(TestCase):
         field_verboses = {
             'post': {
                 'text': 'Текст поста',
-                'pub_date': 'date published',
-                    },
+                'pub_date': 'date published'},
 
             'group': {
                 'title': 'Заголовок',
                 'slug': 'Слаг',
-                'description': 'Описание группы',
-                    },
+                'description': 'Описание группы'},
         }
         for value, expected in field_verboses['post'].items():
             with self.subTest(value=value):

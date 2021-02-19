@@ -1,4 +1,3 @@
-from django.conf.urls.static import static
 from django.test import Client, TestCase
 from django.urls import reverse
 
@@ -41,6 +40,6 @@ class TaskPagesTests(TestCase):
         count_comments = Comment.objects.count()
         response = self.guest_client.get(TaskPagesTests.URL_ADD_COMMENT,
                                          follow=True)
-        self.assertRedirects(response, f'{reverse("login")}' + '?next=' +
-                             TaskPagesTests.URL_ADD_COMMENT)
+        self.assertRedirects(response, f'{reverse("login")}' + '?next='
+                             + TaskPagesTests.URL_ADD_COMMENT)
         self.assertEqual(count_comments, Comment.objects.count())
