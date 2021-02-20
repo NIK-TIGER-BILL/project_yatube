@@ -24,8 +24,8 @@ OTHER_SMALL_GIF = (b'\x47\x49\x46\x38\x39\x61\x02\x00'
                    b'\x02\x00\x01\x00\x00\x02\x02\x0C'
                    b'\x0A\x00\x3B')
 USERNAME = 'test'
-URL_INDEX = reverse('posts:index')
-URL_NEW_POST = reverse('posts:new_post')
+INDEX_URL = reverse('posts:index')
+NEW_POST_URL = reverse('posts:new_post')
 
 
 class PostCreateFormTests(TestCase):
@@ -44,10 +44,10 @@ class PostCreateFormTests(TestCase):
             text='Тестовое описание поста',
             author=User.objects.get(id=cls.test_user.id),
         )
-        cls.URL_EDIT_POST = reverse(
+        cls.EDIT_POST_URL = reverse(
             'posts:post_edit', kwargs={
                 'username': USERNAME, 'post_id': PostCreateFormTests.post.id})
-        cls.URL_POST = reverse(
+        cls.POST_URL = reverse(
             'posts:post', kwargs={
                 'username': USERNAME, 'post_id': PostCreateFormTests.post.id})
 
@@ -74,11 +74,11 @@ class PostCreateFormTests(TestCase):
             'image': uploaded,
         }
         response = self.authorized_client.post(
-            URL_NEW_POST,
+            NEW_POST_URL,
             data=form_data,
             follow=True
         )
-        self.assertRedirects(response, URL_INDEX)
+        self.assertRedirects(response, INDEX_URL)
         self.assertEqual(Post.objects.count(), posts_count + 1)
         self.assertTrue(
             Post.objects.filter(
@@ -92,8 +92,8 @@ class PostCreateFormTests(TestCase):
     def test_edit_post_page_context(self):
         """Шаблон edit_post сформирован с правильным контекстом."""
         urls = [
-            URL_NEW_POST,
-            PostCreateFormTests.URL_EDIT_POST]
+            NEW_POST_URL,
+            PostCreateFormTests.EDIT_POST_URL]
         form_fields = {
             'text': forms.fields.CharField,
             'group': forms.fields.ChoiceField,
@@ -125,7 +125,7 @@ class PostCreateFormTests(TestCase):
             'image': uploaded,
         }
         response = self.authorized_client.post(
-            PostCreateFormTests.URL_EDIT_POST,
+            PostCreateFormTests.EDIT_POST_URL,
             data=form_data,
             follow=True
         )
@@ -133,5 +133,5 @@ class PostCreateFormTests(TestCase):
         self.assertEqual(edit_post.text, form_data['text'])
         self.assertEqual(edit_post.group, other_group)
         self.assertEqual(edit_post.image, 'posts/other_small.gif')
-        self.assertRedirects(response, PostCreateFormTests.URL_POST)
+        self.assertRedirects(response, PostCreateFormTests.POST_URL)
         self.assertEqual(Post.objects.count(), posts_count)

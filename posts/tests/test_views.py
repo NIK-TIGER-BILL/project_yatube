@@ -18,12 +18,12 @@ SMALL_GIF = (b'\x47\x49\x46\x38\x39\x61\x02\x00'
 
 USERNAME = 'test'
 GROUP_SLUG = 'test-group'
-URL_500 = reverse('posts:500')
-URL_INDEX = reverse('posts:index')
-URL_FOLLOW_INDEX = reverse('posts:follow_index')
-URL_GROUP = reverse('posts:group_posts', kwargs={'slug': GROUP_SLUG})
-URL_NEW_POST = reverse('posts:new_post')
-URL_PROFILE = reverse('posts:profile', kwargs={'username': USERNAME})
+PAGE_500_URL = reverse('posts:500')
+INDEX_URL = reverse('posts:index')
+FOLLOW_INDEX_URL = reverse('posts:follow_index')
+GROUP_URL = reverse('posts:group_posts', kwargs={'slug': GROUP_SLUG})
+NEW_POST_URL = reverse('posts:new_post')
+PROFILE_URL = reverse('posts:profile', kwargs={'username': USERNAME})
 
 
 class TaskPagesTests(TestCase):
@@ -52,11 +52,11 @@ class TaskPagesTests(TestCase):
             group=cls.group,
             image=cls.image
         )
-        cls.URL_POST = reverse('posts:post', kwargs={
+        cls.POST_URL = reverse('posts:post', kwargs={
             'username': USERNAME,
             'post_id': TaskPagesTests.post.id
         })
-        cls.URL_EDIT_POST = reverse('posts:post_edit', kwargs={
+        cls.EDIT_POST_URL = reverse('posts:post_edit', kwargs={
             'username': USERNAME,
             'post_id': TaskPagesTests.post.id
         })
@@ -69,14 +69,14 @@ class TaskPagesTests(TestCase):
     def test_pages_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
         templates_page_names = [
-            ['misc/500.html', URL_500],
-            ['index.html', URL_INDEX],
-            ['follow.html', URL_FOLLOW_INDEX],
-            ['group.html', URL_GROUP],
-            ['new_post.html', URL_NEW_POST],
-            ['profile.html', URL_PROFILE],
-            ['detailed_post.html', TaskPagesTests.URL_POST],
-            ['new_post.html', TaskPagesTests.URL_EDIT_POST],
+            ['misc/500.html', PAGE_500_URL],
+            ['index.html', INDEX_URL],
+            ['follow.html', FOLLOW_INDEX_URL],
+            ['group.html', GROUP_URL],
+            ['new_post.html', NEW_POST_URL],
+            ['profile.html', PROFILE_URL],
+            ['detailed_post.html', TaskPagesTests.POST_URL],
+            ['new_post.html', TaskPagesTests.EDIT_POST_URL],
         ]
         for row in templates_page_names:
             with self.subTest(template=row[0]):
@@ -85,7 +85,7 @@ class TaskPagesTests(TestCase):
 
     def test_post_view_on_page(self):
         """Новый пост отображается на страницах index, group, profile"""
-        urls_pages = [URL_INDEX, URL_GROUP, URL_PROFILE]
+        urls_pages = [INDEX_URL, GROUP_URL, PROFILE_URL]
         expect_context = self.post
         for url in urls_pages:
             with self.subTest(url=url):
@@ -96,7 +96,7 @@ class TaskPagesTests(TestCase):
 
     def test_new_post_view_detailed_post_page(self):
         """Шаблон post сформирован с правильным контекстом."""
-        response = self.authorized_client.get(TaskPagesTests.URL_POST)
+        response = self.authorized_client.get(TaskPagesTests.POST_URL)
         current_context = response.context.get('post')
         expect_context = self.post
         self.assertEqual(current_context, expect_context)

@@ -5,12 +5,12 @@ from posts.models import Group, Post, User
 
 USERNAME = 'test'
 GROUP_SLUG = 'test-slug'
-URL_INDEX = reverse('posts:index')
-URL_GROUP = reverse('posts:group_posts', kwargs={'slug': GROUP_SLUG})
-URL_NEW_POST = reverse('posts:new_post')
-URL_PROFILE = reverse('posts:profile', kwargs={'username': USERNAME})
-URL_FALSE_PAGE = '/false_page/'
-URL_LOGIN = reverse('login')
+INDEX_URL = reverse('posts:index')
+GROUP_URL = reverse('posts:group_posts', kwargs={'slug': GROUP_SLUG})
+NEW_POST_URL = reverse('posts:new_post')
+PROFILE_URL = reverse('posts:profile', kwargs={'username': USERNAME})
+FALSE_PAGE_URL = '/false_page/'
+LOGIN_URL = reverse('login')
 
 
 class PostsURLTests(TestCase):
@@ -27,11 +27,11 @@ class PostsURLTests(TestCase):
             text='Тестовое описание поста',
             author=cls.test_user
         )
-        cls.URL_POST = reverse('posts:post', kwargs={
+        cls.POST_URL = reverse('posts:post', kwargs={
             'username': USERNAME,
             'post_id': PostsURLTests.post.id
         })
-        cls.URL_EDIT_POST = reverse('posts:post_edit', kwargs={
+        cls.EDIT_POST_URL = reverse('posts:post_edit', kwargs={
             'username': USERNAME,
             'post_id': PostsURLTests.post.id
         })
@@ -50,15 +50,15 @@ class PostsURLTests(TestCase):
                    self.authorized_client, self.guest_client,
                    self.guest_client, self.guest_client, self.guest_client,
                    authorized_client_2, self.authorized_client]
-        urls = [URL_INDEX,
-                URL_GROUP,
-                URL_NEW_POST,
-                URL_PROFILE,
-                URL_FALSE_PAGE,
-                PostsURLTests.URL_POST,
-                PostsURLTests.URL_EDIT_POST,
-                PostsURLTests.URL_EDIT_POST,
-                PostsURLTests.URL_EDIT_POST]
+        urls = [INDEX_URL,
+                GROUP_URL,
+                NEW_POST_URL,
+                PROFILE_URL,
+                FALSE_PAGE_URL,
+                PostsURLTests.POST_URL,
+                PostsURLTests.EDIT_POST_URL,
+                PostsURLTests.EDIT_POST_URL,
+                PostsURLTests.EDIT_POST_URL]
         status_codes = [200, 200, 200, 200, 404, 200, 302, 302, 200]
 
         for (client, url, status_code) in zip(clients, urls, status_codes):
@@ -68,8 +68,8 @@ class PostsURLTests(TestCase):
 
     def test_urls_redirect(self):
         """URL перенаправляет пользователя на нужную старницу"""
-        redirects_url_names = [URL_NEW_POST, PostsURLTests.URL_EDIT_POST]
+        redirects_url_names = [NEW_POST_URL, PostsURLTests.EDIT_POST_URL]
         for url in redirects_url_names:
             with self.subTest(url=url):
                 response = self.guest_client.get(url, follow=True)
-                self.assertRedirects(response, URL_LOGIN + '?next=' + url)
+                self.assertRedirects(response, LOGIN_URL + '?next=' + url)
