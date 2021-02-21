@@ -43,16 +43,15 @@ class TaskPagesTests(TestCase):
 
     def test_view_post_followed_users(self):
         """Посты отображаются у подписанных людей"""
-        self.authorized_client.get(FOLLOW_TO_ALEX_URL)
+        Follow.objects.create(user=TaskPagesTests.test_user_nikita,
+                              author=TaskPagesTests.test_user_alex)
         response_nikita = self.authorized_client.get(FOLLOW_INDEX_URL)
         context_nikita = response_nikita.context['page']
         self.assertIn(TaskPagesTests.post, context_nikita)
 
     def test_do_not_view_post_unfollowed_users(self):
         """Посты неотображаются у неподписанных людей"""
-        test_user_taya = User.objects.create(username='test_taya')
-        authorized_client_taya = Client()
-        authorized_client_taya.force_login(test_user_taya)
-        response_taya = authorized_client_taya.get(FOLLOW_INDEX_URL)
-        context_taya = response_taya.context['page']
-        self.assertNotIn(TaskPagesTests.post, context_taya)
+        authorized_client_alex = Client()
+        authorized_client_alex.force_login(self.test_user_nikita)
+        response_alex = authorized_client_alex.get(FOLLOW_INDEX_URL)
+        self.assertNotIn(TaskPagesTests.post, response_alex.context['page'])

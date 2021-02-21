@@ -148,7 +148,7 @@ class PostCreateFormTests(TestCase):
             data=form_data,
         )
         edit_post = Post.objects.get(id=PostCreateFormTests.post.id)
-        self.assertEqual(edit_post.text, PostCreateFormTests.post.text)
+        self.assertEqual(edit_post, PostCreateFormTests.post)
         self.assertEqual(Post.objects.count(), posts_count)
 
     def test_add_comment_context(self):

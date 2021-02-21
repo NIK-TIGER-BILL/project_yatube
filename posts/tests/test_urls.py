@@ -4,6 +4,7 @@ from django.urls import reverse
 from posts.models import Group, Post, User
 
 USERNAME = 'test'
+OTHER_USERNAME = 'other'
 GROUP_SLUG = 'test-slug'
 INDEX_URL = reverse('posts:index')
 FOLLOW_INDEX_URL = reverse('posts:follow_index')
@@ -61,15 +62,19 @@ class PostsURLTests(TestCase):
 
     def test_urls_redirect(self):
         """URL перенаправляет пользователя на нужную старницу"""
+        other_test_user = User.objects.create(username=OTHER_USERNAME)
+        other_client = Client()
+        other_client.force_login(other_test_user)
         client_url_redirect = [
-            [self.guest_client, NEW_POST_URL, LOGIN_URL + '?next='
-             + NEW_POST_URL],
-            [self.guest_client, PostsURLTests.EDIT_POST_URL, LOGIN_URL
-             + '?next=' + PostsURLTests.EDIT_POST_URL],
-            [self.guest_client, FOLLOW_INDEX_URL, LOGIN_URL
-             + '?next=' + FOLLOW_INDEX_URL],
+            [self.guest_client, NEW_POST_URL,
+             f'{LOGIN_URL}?next={NEW_POST_URL}'],
+            [self.guest_client, PostsURLTests.EDIT_POST_URL,
+             f'{LOGIN_URL}?next={PostsURLTests.EDIT_POST_URL}'],
+            [other_client, PostsURLTests.EDIT_POST_URL,
+             PostsURLTests.POST_URL],
+            [self.guest_client, FOLLOW_INDEX_URL,
+             f'{LOGIN_URL}?next={FOLLOW_INDEX_URL}'],
         ]
         for client, url, redirect_url in client_url_redirect:
             with self.subTest(url=url):
-                response = client.get(url, follow=True)
-                self.assertRedirects(response, redirect_url)
+                self.assertRedirects(client.get(url, follow=True), redirect_url)

@@ -52,10 +52,10 @@ def profile(request, username):
     paginator = Paginator(author_posts, 10)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    follow = True if (request.user.is_authenticated and author != request.user
-                      and Follow.objects.filter(
-                          author=author,
-                          user=request.user).exists()) else False
+    follow = (request.user.is_authenticated and author != request.user
+              and Follow.objects.filter(
+                  author=author,
+                  user=request.user).exists())
     context = {
         'author': author,
         'follow': follow,
@@ -70,10 +70,10 @@ def post_view(request, username, post_id):
     comments = post.comments.all()
     form = CommentForm()
     author = post.author
-    follow = True if (request.user.is_authenticated and author != request.user
-                      and Follow.objects.filter(
-                          author=author,
-                          user=request.user).exists()) else False
+    follow = (request.user.is_authenticated and author != request.user
+              and Follow.objects.filter(
+                  author=author,
+                  user=request.user).exists())
     context = {
         'post': post,
         'form': form,
