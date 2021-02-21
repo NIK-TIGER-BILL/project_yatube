@@ -74,11 +74,11 @@ class PostCreateFormTests(TestCase):
             data=form_data,
             follow=True
         )
+        self.assertRedirects(response, INDEX_URL)
+        self.assertEqual(len(response.context['page']), posts_count + 1)
         for post in response.context['page']:
             if post.id not in list_id:
                 break
-        self.assertRedirects(response, INDEX_URL)
-        self.assertEqual(len(response.context['page']), posts_count + 1)
         self.assertEqual(post.author, PostCreateFormTests.test_user)
         self.assertEqual(post.text, form_data['text'])
         self.assertEqual(post.group, PostCreateFormTests.group)
