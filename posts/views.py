@@ -54,7 +54,8 @@ def profile(request, username):
     page = paginator.get_page(page_number)
     follow = True if (request.user.is_authenticated and author != request.user
                       and Follow.objects.filter(
-                        author=author, user=request.user).exists()) else False
+                          author=author,
+                          user=request.user).exists()) else False
     context = {
         'author': author,
         'follow': follow,
@@ -71,7 +72,8 @@ def post_view(request, username, post_id):
     author = post.author
     follow = True if (request.user.is_authenticated and author != request.user
                       and Follow.objects.filter(
-                        author=author, user=request.user).exists()) else False
+                          author=author,
+                          user=request.user).exists()) else False
     context = {
         'post': post,
         'form': form,
@@ -132,8 +134,8 @@ def follow_index(request):
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
     if (author != request.user
-        and not Follow.objects.filter(
-                user=request.user, author=author).exists()):
+        and not Follow.objects.filter(user=request.user,
+                                      author=author).exists()):
         Follow.objects.create(
             user=request.user,
             author=author,
