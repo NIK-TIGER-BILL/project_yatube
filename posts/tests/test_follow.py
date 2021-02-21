@@ -5,10 +5,8 @@ from posts.models import Follow, Post, User
 
 ALEX_USERNAME = 'test_alex'
 NIKITA_USERNAME = 'test_nikita'
-FOLLOW_TO_ALEX_URL = reverse('posts:profile_follow',
-                             kwargs={'username': ALEX_USERNAME})
-UNFOLLOW_TO_ALEX_URL = reverse('posts:profile_unfollow',
-                               kwargs={'username': ALEX_USERNAME})
+FOLLOW_TO_ALEX_URL = reverse('posts:profile_follow', args=[ALEX_USERNAME])
+UNFOLLOW_TO_ALEX_URL = reverse('posts:profile_unfollow', args=[ALEX_USERNAME])
 FOLLOW_INDEX_URL = reverse('posts:follow_index')
 
 
@@ -30,8 +28,9 @@ class TaskPagesTests(TestCase):
     def test_follow(self):
         """Проверка подписки на пользователя"""
         self.authorized_client.get(FOLLOW_TO_ALEX_URL)
-        follow = Follow.objects.get(user=TaskPagesTests.test_user_nikita)
-        self.assertEqual(TaskPagesTests.test_user_alex, follow.author)
+        self.assertTrue(Follow.objects.filter(
+            user=TaskPagesTests.test_user_nikita,
+            author=TaskPagesTests.test_user_alex).exists())
 
     def test_unfollow(self):
         """Проверка отписки от пользователя"""
@@ -42,15 +41,18 @@ class TaskPagesTests(TestCase):
             user=TaskPagesTests.test_user_nikita,
             author=TaskPagesTests.test_user_alex).exists())
 
-    def test_view_post_followed_and_unfollowed_users(self):
+    def test_view_post_followed_users(self):
         """Посты отображаются у подписанных людей"""
         self.authorized_client.get(FOLLOW_TO_ALEX_URL)
         response_nikita = self.authorized_client.get(FOLLOW_INDEX_URL)
-        context_nikita = response_nikita.context.get('page')
+        context_nikita = response_nikita.context['page']
+        self.assertIn(TaskPagesTests.post, context_nikita)
+
+    def test_do_not_view_post_unfollowed_users(self):
+        """Посты неотображаются у неподписанных людей"""
         test_user_taya = User.objects.create(username='test_taya')
         authorized_client_taya = Client()
         authorized_client_taya.force_login(test_user_taya)
         response_taya = authorized_client_taya.get(FOLLOW_INDEX_URL)
-        context_taya = response_taya.context.get('page')
-        self.assertEqual(len(context_taya), 0)
-        self.assertEqual(context_nikita[0].text, TaskPagesTests.post.text)
+        context_taya = response_taya.context['page']
+        self.assertNotIn(TaskPagesTests.post, context_taya)

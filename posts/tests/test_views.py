@@ -18,12 +18,15 @@ SMALL_GIF = (b'\x47\x49\x46\x38\x39\x61\x02\x00'
 
 USERNAME = 'test'
 GROUP_SLUG = 'test-group'
+OTHER_GROUP_SLUG = 'other-test-group'
 PAGE_500_URL = reverse('posts:500')
+PAGE_404_URL = reverse('posts:404')
 INDEX_URL = reverse('posts:index')
 FOLLOW_INDEX_URL = reverse('posts:follow_index')
-GROUP_URL = reverse('posts:group_posts', kwargs={'slug': GROUP_SLUG})
+GROUP_URL = reverse('posts:group_posts', args=[GROUP_SLUG])
+OTHER_GROUP_URL = reverse('posts:group_posts', args=[OTHER_GROUP_SLUG])
 NEW_POST_URL = reverse('posts:new_post')
-PROFILE_URL = reverse('posts:profile', kwargs={'username': USERNAME})
+PROFILE_URL = reverse('posts:profile', args=[USERNAME])
 
 
 class TaskPagesTests(TestCase):
@@ -52,14 +55,9 @@ class TaskPagesTests(TestCase):
             group=cls.group,
             image=cls.image
         )
-        cls.POST_URL = reverse('posts:post', kwargs={
-            'username': USERNAME,
-            'post_id': TaskPagesTests.post.id
-        })
-        cls.EDIT_POST_URL = reverse('posts:post_edit', kwargs={
-            'username': USERNAME,
-            'post_id': TaskPagesTests.post.id
-        })
+        cls.POST_URL = reverse('posts:post', args=[USERNAME, cls.post.id])
+        cls.EDIT_POST_URL = reverse('posts:post_edit',
+                                    args=[USERNAME, cls.post.id])
 
     @classmethod
     def tearDownClass(cls):
@@ -70,6 +68,7 @@ class TaskPagesTests(TestCase):
         """URL-адрес использует соответствующий шаблон."""
         templates_page_names = [
             ['misc/500.html', PAGE_500_URL],
+            ['misc/404.html', PAGE_404_URL],
             ['index.html', INDEX_URL],
             ['follow.html', FOLLOW_INDEX_URL],
             ['group.html', GROUP_URL],
@@ -78,10 +77,10 @@ class TaskPagesTests(TestCase):
             ['detailed_post.html', TaskPagesTests.POST_URL],
             ['new_post.html', TaskPagesTests.EDIT_POST_URL],
         ]
-        for row in templates_page_names:
-            with self.subTest(template=row[0]):
-                response = self.authorized_client.get(row[1])
-                self.assertTemplateUsed(response, row[0])
+        for template, url in templates_page_names:
+            with self.subTest(url=url):
+                self.assertTemplateUsed(self.authorized_client.get(url),
+                                        template)
 
     def test_post_view_on_page(self):
         """Новый пост отображается на страницах index, group, profile"""
@@ -91,12 +90,26 @@ class TaskPagesTests(TestCase):
             with self.subTest(url=url):
                 response = self.guest_client.get(url)
                 self.assertEqual(len(response.context['page']), 1)
-                current_context = response.context.get('page')[0]
+                current_context = response.context['page'][0]
                 self.assertEqual(current_context, expect_context)
 
     def test_new_post_view_detailed_post_page(self):
         """Шаблон post сформирован с правильным контекстом."""
         response = self.authorized_client.get(TaskPagesTests.POST_URL)
-        current_context = response.context.get('post')
-        expect_context = self.post
-        self.assertEqual(current_context, expect_context)
+        self.assertEqual(response.context['post'], TaskPagesTests.post)
+        self.assertEqual(response.context['author'], TaskPagesTests.test_user)
+
+    def test_new_post_do_not_view_other_group(self):
+        """Новый post неотображается в другой группе."""
+        Group.objects.create(
+            title='Другой заголовок',
+            slug=OTHER_GROUP_SLUG,
+            description='Другое тестовое описание',
+        )
+        response = self.authorized_client.get(OTHER_GROUP_URL)
+        self.assertNotIn(TaskPagesTests.post, response.context['page'])
+
+    def test_author_context_page_profile(self):
+        """Шаблон profile сформирован с правильным контекстом."""
+        response = self.authorized_client.get(PROFILE_URL)
+        self.assertEqual(response.context['author'], TaskPagesTests.test_user)

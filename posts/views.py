@@ -108,17 +108,12 @@ def add_comment(request, username, post_id):
     return redirect('posts:post', username=username, post_id=post_id)
 
 
-def page_not_found(request, exception):
-    return render(
-        request,
-        "misc/404.html",
-        {"path": request.path},
-        status=404
-    )
+def page_not_found(request, exception=None):
+    return render(request, 'misc/404.html', {'path': request.path}, status=404)
 
 
 def server_error(request):
-    return render(request, "misc/500.html", status=500)
+    return render(request, 'misc/500.html', status=500)
 
 
 @login_required
@@ -127,7 +122,7 @@ def follow_index(request):
     paginator = Paginator(post_list, 10)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(request, "follow.html", {
+    return render(request, 'follow.html', {
         'page': page,
         'paginator': paginator
     })

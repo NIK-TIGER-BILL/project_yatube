@@ -16,8 +16,7 @@ class TaskPagesTests(TestCase):
             author=cls.test_user,
         )
         cls.ADD_COMMENT_URL = reverse('posts:add_comment',
-                                      kwargs={'username': USERNAME,
-                                              'post_id': cls.post.id},)
+                                      args=[USERNAME, cls.post.id])
 
     def setUp(self):
         self.guest_client = Client()
@@ -25,7 +24,7 @@ class TaskPagesTests(TestCase):
         self.authorized_client.force_login(self.test_user)
 
     def test_authorized_client_comment(self):
-        """Авторизированный пользователь может комментиовать пост"""
+        """Авторизированный пользователь может комментировать пост"""
         text_comment = 'Тестовый комментарий'
         self.authorized_client.post(TaskPagesTests.ADD_COMMENT_URL,
                                     data={'text': text_comment}
@@ -36,7 +35,7 @@ class TaskPagesTests(TestCase):
         self.assertEqual(comment.author, TaskPagesTests.test_user)
 
     def test_guest_client_comment_redirect_login(self):
-        """Гостя переводит на авторизацию при комментировании"""
+        """Гость не может создать комментарий"""
         count_comments = Comment.objects.count()
         self.guest_client.post(TaskPagesTests.ADD_COMMENT_URL)
         self.assertEqual(count_comments, Comment.objects.count())
