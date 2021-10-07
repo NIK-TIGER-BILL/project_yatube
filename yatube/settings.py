@@ -2,7 +2,7 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = '6_&j-@xzbyhnkf#6#mk6*5ce2sni4q3#sj&i55y1t&@gc8ppad'
+SECRET_KEY = '6_&j-@xzbyhnkf#6#mk6*5ce2sni4q3#sj&i55y1t&@gc8ppad' # Вы можете поставить свой SECRET_KEY для безопасности. Т.к. данный ключ, лежит в публичном репозитории.
 
 DEBUG = True
 
